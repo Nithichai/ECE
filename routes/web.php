@@ -25,3 +25,5 @@ Auth::routes();
 Route::get('/dashboard ', 'DashboardController@index');
 
 Route::resource('/portfolio','PortfolioController');
+
+Route::post('/portfolio/search', 'PortfolioController@search');

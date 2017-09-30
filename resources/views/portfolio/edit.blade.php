@@ -1,11 +1,8 @@
 @extends('layouts.app')
 @section('content')
   @foreach($personal as $data)
-    <form action="/portfolio/{{ $data->student_id }}" method="PUT">
+    {{ Form::open(array('url'=>'/portfolio/' . $data->student_id, 'method'=>'put')) }}
     {{ csrf_field() }}
-      <div class="container-fluid">
-        <h1>{{ $data->name }} {{$data->surname}}</h1>
-      </div>
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-offset-5 col-sm-2"><h2>IMAGE</h2></div>
@@ -16,35 +13,51 @@
         <div class="well">
           <div class="row">
             <div class="col-xs-6 col-md-2"><p>Name</p></div>
-            <div class="col-xs-6 col-md-10"><input type="text" name="personal_name" value="{{$data->name}}"></div>
+            <div class="col-xs-6 col-md-10">
+              {{ Form::text('personal_name', $data->name) }}
+            </div>
           </div>
           <div class="row">
-            <div class="col-xs-6 col-md-2"><p>Student ID</p></div>
-            <div class="col-xs-6 col-md-10"><input type="text" name="personal_student_id" value="{{$data->student_id}}"></div>
+            <div class="col-xs-6 col-md-2"><p>Surname</p></div>
+            <div class="col-xs-6 col-md-10">
+              {{ Form::text('personal_surname', $data->surname) }}
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-6 col-md-2"><p>Thailand ID</p></div>
-            <div class="col-xs-6 col-md-10"><input type="text" name="personal_thailand_id" value="{{$data->thailand_id}}"></div>
+            <div class="col-xs-6 col-md-10">
+              {{ Form::text('personal_thailand_id', $data->thailand_id) }}
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-6 col-md-2"><p>Birthday</p></div>
-            <div class="col-xs-6 col-md-10"><input type="date" name="personal_birthday" value="{{$data->birthday}}"></div>
+            <div class="col-xs-6 col-md-10">
+              {{ Form::date('personal_birthday', $data->birthday) }}
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-6 col-md-2"><p>Address</p></div>
-            <div class="col-xs-6 col-md-10"><input type="text" name="personal_address" value="{{$data->address}}"></div>
+            <div class="col-xs-6 col-md-10">
+              {{ Form::text('personal_address', $data->address) }}
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-6 col-md-2"><p>Telephone</p></div>
-            <div class="col-xs-6 col-md-10"><input type="tel" name="personal_telephone" value="{{$data->telephone}}"></div>
+            <div class="col-xs-6 col-md-10">
+              {{ Form::text ('personal_telephone', $data->telephone) }}
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-6 col-md-2"><p>facebook</p></div>
-            <div class="col-xs-6 col-md-10"><input type="text" name="personal_facebook" value="{{$data->facebook}}"></div>
+            <div class="col-xs-6 col-md-10">
+              {{ Form::text('personal_facebook', $data->facebook) }}
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-6 col-md-2"><p>Line ID</p></div>
-            <div class="col-xs-6 col-md-10"><input type="text" name="personal_line" value="{{$data->line}}"></div>
+            <div class="col-xs-6 col-md-10">
+              {{ Form::text('personal_line', $data->line) }}
+            </div>
           </div>
         </div>
       </div>
@@ -54,19 +67,31 @@
             @foreach($reward as $data_reward)
               <div class="row">
                 <div class="col-xs-6 col-md-2"><p>Reward Name</p></div>
-                <div class="col-xs-6 col-md-10"><input type="text" name="reward_name_{{$data_reward->id}}" value="{{$data_reward->name}}"></div>
+                <div class="col-xs-6 col-md-10">
+                  {{ Form::text('reward_name_' . $data_reward->id,
+                      $data_reward->name) }}
+                </div>
               </div>
               <div class="row">
                 <div class="col-xs-6 col-md-2"><p>Rank</p></div>
-                <div class="col-xs-6 col-md-10"><input type="text" name="reward_rank_{{$data_reward->id}}" value="{{$data_reward->rank}}"></div>
+                <div class="col-xs-6 col-md-10">
+                  {{ Form::text('reward_rank_' . $data_reward->id,
+                      $data_reward->rank) }}
+                </div>
               </div>
               <div class="row">
                 <div class="col-xs-6 col-md-2"><p>Received Date</p></div>
-                <div class="col-xs-6 col-md-10"><input type="date" name="reward_date_{{$data_reward->id}}" value="{{$data_reward->date}}"></div>
+                <div class="col-xs-6 col-md-10">
+                  {{ Form::text('reward_date_' . $data_reward->id,
+                      $data_reward->date) }}
+                </div>
               </div>
               <div class="row">
                 <div class="col-xs-6 col-md-2"><p>Received Place</p></div>
-                <div class="col-xs-6 col-md-10"><input type="text" name="reward_place_{{$data_reward->id}}" value="{{$data_reward->place}}"></div>
+                <div class="col-xs-6 col-md-10">
+                  {{ Form::text('reward_place_' . $data_reward->id,
+                      $data_reward->place) }}
+                </div>
               </div>
               @if(count($reward) > 1)
                 <hr>
@@ -85,6 +110,6 @@
           </div>
         </div>
       </div>
-    </form>
+    {{  Form::close() }}
   @endforeach
 @endsection

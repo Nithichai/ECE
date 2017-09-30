@@ -23,16 +23,17 @@ class PortfolioController extends Controller
       return view('portfolio.index');
     }
 
+    public function create() {
+      return view('portfolio.create');
+    }
+
     public function store(Request $req) {
-      $search = $req->input('search');
-      $std_personal = null;
-      if ($search == null) {
-        $std_personal = $this->getRandomStudentPersonal();
-      } else {
-        $std_personal = $this->getSomeStudentPersonal($search);
-      }
-      $array_std_personal = $this->changeToArrayForAJAX($std_personal);
-      return response()->json(array('personal' => $array_std_personal), 200);
+      $this->createPersonal($req);
+      $std_personal = $this->getStudentPersonal($req->input('student_id'));
+      $std_reward = $this->getStudentReward($req->input('student_id'));
+      return redirect('/portfolio/'. $req->input('student_id'))
+        ->with('personal', $std_personal)
+        ->with('reward', $std_reward);
     }
 
     public function show($id) {
@@ -52,45 +53,71 @@ class PortfolioController extends Controller
     }
 
     public function update(Request $req, $id) {
-      print_r($req);
       $std_personal = $this->getStudentPersonal($id);
       $this->updatePersonalEdit($id, $req);
       $std_reward = $this->getStudentReward($id);
-      $this->updateRewardEdit($req);
-      // $this->show($id);
-      return view('portfolio.edit')
+      $this->updateRewardEdit($id, $req);
+      return redirect('/portfolio/' . $id)
         ->with('personal', $std_personal)
         ->with('reward', $std_reward);
     }
 
-    private function updateRewardEdit(Request $req) {
+    public function search(Request $req) {
+      $search = $req->input('search');
+      $std_personal = null;
+      if ($search == null || count($search) < 1) {
+        $std_personal = $this->getRandomStudentPersonal();
+      } else {
+        $std_personal = $this->getSomeStudentPersonal($search);
+      }
+      $array_std_personal = $this->changeToArrayForAJAX($std_personal);
+      return response()->json(array('personal' => $array_std_personal), 200);
+    }
+
+    private function updateRewardEdit($id, Request $req) {
       $std_reward = $this->getStudentReward($id);
       foreach ($std_reward as $key=>$value) {
+        echo $value->id;
         StudentReward
           ::where('id', $value->id)
           ->update([
-            'name' => $req->name('reward_name'),
-            'rank' => $req->name('reward_rank'),
-            'date' => $req->name('personal_date'),
-            'place' => $req->name('personal_place'),
+            'name' => $req->input('reward_name_' . $value->id),
+            'rank' => $req->input('reward_rank_' . $value->id),
+            'date' => $req->input('reward_date_' . $value->id),
+            'place' => $req->input('reward_place_' . $value->id),
           ]);
       }
     }
 
-    private function updatePersonalEdit($std_personal, $id, Request $req) {
+    private function updatePersonalEdit($id, Request $req) {
       $std_personal = $this->getStudentPersonal($id);
       StudentPersonal
         ::where('student_id', $id)
         ->update([
-          'thailand_id' => $req->name('personal_thailand_id'),
-          'name' => $req->name('personal_name'),
-          'surname' => $req->name('personal_surname'),
-          'birthday' => $req->name('personal_birthday'),
-          'address' => $req->name('personal_address'),
-          'telephone' => $req->name('personal_telephone'),
-          'facebook' => $req->name('personal_facebook'),
-          'birthday' => $req->name('personal_line'),
+          'thailand_id' => $req->input('personal_thailand_id'),
+          'name' => $req->input('personal_name'),
+          'surname' => $req->input('personal_surname'),
+          'birthday' => $req->input('personal_birthday'),
+          'address' => $req->input('personal_address'),
+          'telephone' => $req->input('personal_telephone'),
+          'facebook' => $req->input('personal_facebook'),
+          'line' => $req->input('personal_line'),
         ]);
+    }
+
+    private function createPersonal(Request $req) {
+      StudentPersonal
+        ::insert([[
+          'student_id' => $req->input('student_id'),
+          'thailand_id' => $req->input('thailand_id'),
+          'name' => $req->input('name'),
+          'surname' => $req->input('surname'),
+          'birthday' => $req->input('birthday'),
+          'address' => $req->input('address'),
+          'telephone' => $req->input('telephone'),
+          'facebook' => $req->input('facebook'),
+          'line' => $req->input('line'),
+        ]]);
     }
 
     private function getStudentReward($id) {

@@ -21,31 +21,17 @@
         }
     }
     function searchStudent(search) {
-      if (search.length == 0) {
-        $.ajax({
-          type : 'POST',
-          url : '/portfolio',
-          data: { '_token' : '<?php echo csrf_token() ?>', 'search' : null },
-          success : function (data) {
-            show_result_total(data)
-          },
-          error: function (data) {
-            console.log(data)
-          }
-        })
-      } else {
-        $.ajax({
-          type : 'POST',
-          url : '/portfolio',
-          data: { '_token' : '<?php echo csrf_token() ?>', 'search' : search },
-          success : function (data) {
-            show_result_total(data)
-          },
-          error: function (data) {
-            console.log(data)
-          }
-        })
-      }
+      $.ajax({
+        type : 'POST',
+        url : '/portfolio/search',
+        data: { '_token' : '<?php echo csrf_token() ?>', 'search' : search },
+        success : function (data) {
+          show_result_total(data)
+        },
+        error: function (data) {
+          console.log(data)
+        }
+      })
     }
   </script>
   <h1>Portfolio</h1>
